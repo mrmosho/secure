@@ -36,8 +36,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => (
   </>
 );
 
-console.log("Clerk Key:", clerkKey);
-
 const App = () => (
   <ClerkProvider publishableKey={clerkKey}>
     <QueryClientProvider client={queryClient}>
