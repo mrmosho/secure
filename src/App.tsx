@@ -1,12 +1,16 @@
-import { Toaster } from "@/components/UI/toaster";
-import { Toaster as Sonner } from "@/components/UI/sonner";
-import { TooltipProvider } from "@/components/UI/tooltip";
+// External Libraries
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
+
+// Components
 import MainLayout from "./components/Layout/MainLayout";
 import { ImageScanner } from './components/ImageScanner';
 
+// Pages
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
