@@ -3,13 +3,14 @@ import { Toaster as Sonner } from "@/components/UI/sonner";
 import { TooltipProvider } from "@/components/UI/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
+import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
 import MainLayout from "./components/Layout/MainLayout";
+import { ImageScanner } from './components/ImageScanner';
 
 import Index from "./pages/Index";
-import Login from "./pages/Auth/Login";
-import Register from "./pages/Auth/Register";
-import ForgotPassword from "./pages/Auth/ForgotPassword";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
 import Dashboard from "./pages/Dashboard";
 import MonitoringPanel from "./pages/MonitoringPanel";
 import Settings from "./pages/Settings";
@@ -19,33 +20,23 @@ import TryUs from "./pages/TryUs";
 import AboutUs from "./pages/AboutUs";
 import NotFound from "./pages/NotFound";
 
-// Protected route component that redirects to login if not authenticated
-import { useAuth } from "./context/AuthContext";
-
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-center">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-ts-purple-600 to-ts-pink-500 bg-clip-text text-transparent">
-            type<span className="font-light">secure</span>
-          </h1>
-          <p className="mt-2 text-muted-foreground">Loading security interface...</p>
-        </div>
-      </div>
-    );
-  }
-
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
-};
-
 const queryClient = new QueryClient();
+const clerkKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => (
+  <>
+    <SignedIn>{children}</SignedIn>
+    <SignedOut>
+      <RedirectToSignIn />
+    </SignedOut>
+  </>
+);
+
+console.log("Clerk Key:", clerkKey);
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
+  <ClerkProvider publishableKey={clerkKey}>
+    <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
@@ -58,7 +49,7 @@ const App = () => (
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/about" element={<AboutUs />} />
             <Route path="/try-us" element={<TryUs />} />
-            
+
             {/* Protected Routes with MainLayout */}
             <Route 
               path="/dashboard" 
@@ -70,7 +61,6 @@ const App = () => (
             >
               <Route index element={<Dashboard />} />
             </Route>
-            
             <Route 
               path="/monitoring" 
               element={
@@ -81,7 +71,6 @@ const App = () => (
             >
               <Route index element={<MonitoringPanel />} />
             </Route>
-            
             <Route 
               path="/settings" 
               element={
@@ -92,7 +81,6 @@ const App = () => (
             >
               <Route index element={<Settings />} />
             </Route>
-            
             <Route 
               path="/notifications" 
               element={
@@ -103,13 +91,13 @@ const App = () => (
             >
               <Route index element={<Notifications />} />
             </Route>
-            
+            <Route path="/image-scanner" element={<ProtectedRoute><ImageScanner /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
-    </AuthProvider>
-  </QueryClientProvider>
+    </QueryClientProvider>
+  </ClerkProvider>
 );
 
 export default App;

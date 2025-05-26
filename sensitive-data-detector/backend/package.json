@@ -1,0 +1,16 @@
+{
+  "name": "sensitive-data-detector-backend",
+  "version": "1.0.0",
+  "description": "Backend for the Sensitive Data Detector application",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "axios": "^0.21.1"
+  },
+  "author": "",
+  "license": "ISC"
+}
