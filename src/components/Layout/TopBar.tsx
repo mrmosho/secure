@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useTheme } from 'next-themes';
 import { Sun, Moon, Bell, User, Settings, LogOut, X, Check, AlertTriangle, Info } from 'lucide-react';
-import { Badge } from '@/components/UI/badge';
+import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import {
@@ -13,8 +13,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/UI/dropdown-menu';
-import { ScrollArea } from '@/components/UI/scroll-area';
-import { Button } from '@/components/UI/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
 
 type SecurityStatus = 'Protected' | 'Warning' | 'At Risk';
