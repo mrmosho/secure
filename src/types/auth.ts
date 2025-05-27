@@ -5,13 +5,11 @@ export interface User {
   created_at: Date;
 }
 
-export interface SignUpData {
+export interface LoginCredentials {
   email: string;
-  username: string;
   password: string;
 }
 
-export interface LoginData {
-  email: string;
-  password: string;
+export interface RegisterData extends LoginCredentials {
+  username: string;
 }

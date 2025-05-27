@@ -1,137 +1,70 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatarUrl?: string;
-}
+import { User } from "../types/auth";
 
 interface AuthContextType {
   user: User | null;
+  setUser: (user: User | null) => void;
   isAuthenticated: boolean;
-  isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
-  forgotPassword: (email: string) => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
-
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  // Check localStorage on mount
   useEffect(() => {
-    // Check if user is logged in via JWT in local storage
-    const token = localStorage.getItem("ts-auth-token");
-    
-    if (token) {
-      // This would be replaced with an actual token validation API call
-      // For now, we'll simulate a logged-in user
-      setUser({
-        id: "1",
-        name: "Test User",
-        email: "user@example.com",
-      });
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
     }
-    
-    setIsLoading(false);
   }, []);
 
   const login = async (email: string, password: string) => {
-    setIsLoading(true);
-    
     try {
-      // Mock API call - would be replaced with actual auth API
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      // Simulate successful login
-      const mockUser = {
-        id: "1",
-        name: "Test User",
-        email: email,
-      };
-      
-      // Store token in local storage
-      localStorage.setItem("ts-auth-token", "mock-jwt-token");
-      
-      setUser(mockUser);
-    } catch (error) {
-      console.error("Login failed:", error);
-      throw new Error("Invalid email or password");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const register = async (name: string, email: string, password: string) => {
-    setIsLoading(true);
-
-    try {
-      const response = await fetch("http://localhost:3001/api/users/register", {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Registration failed. Please try again.");
+        throw new Error("Login failed");
       }
 
       const userData = await response.json();
       setUser(userData);
-    } catch (error: any) {
-      console.error("Registration failed:", error);
-      throw new Error(error.message || "Registration failed. Please try again.");
-    } finally {
-      setIsLoading(false);
+      localStorage.setItem("user", JSON.stringify(userData));
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
     }
   };
 
   const logout = () => {
-    localStorage.removeItem("ts-auth-token");
     setUser(null);
+    localStorage.removeItem("user");
   };
 
-  const forgotPassword = async (email: string) => {
-    setIsLoading(true);
-    
-    try {
-      // Mock API call - would be replaced with actual forgot password API
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      // Simulating successful password reset request
-    } catch (error) {
-      console.error("Password reset failed:", error);
-      throw new Error("Password reset failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+  const value = {
+    user,
+    setUser,
+    isAuthenticated: !!user,
+    login,
+    logout,
   };
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isAuthenticated: !!user,
-        isLoading,
-        login,
-        register,
-        logout,
-        forgotPassword,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };
