@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 import type { RegisterData } from "@/types/auth";
 
 export default function Register() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { setUser } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<RegisterData>({
     email: "",
@@ -31,6 +33,9 @@ export default function Register() {
       if (!response.ok) {
         throw new Error('Registration failed');
       }
+
+      const userData = await response.json();
+      setUser(userData); // Set the user data in context
 
       toast({
         title: "Success",

@@ -36,7 +36,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-const App = () => {
+export default function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
@@ -103,5 +103,3 @@ const App = () => {
     </AuthProvider>
   );
 }
-
-export default App;
