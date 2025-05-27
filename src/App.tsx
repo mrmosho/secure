@@ -3,12 +3,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 // Components
 import MainLayout from "./components/Layout/MainLayout";
 import { ImageScanner } from './components/ImageScanner';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 // Pages
 import Index from "./pages/Index";
@@ -26,24 +26,19 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => (
-  <>
-    <SignedIn>{children}</SignedIn>
-    <SignedOut>
-      <RedirectToSignIn />
-    </SignedOut>
-  </>
-);
-
-const App = () => {
-  const publishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
-
-  if (!publishableKey) {
-    throw new Error("Missing Clerk Publishable Key");
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated } = useAuth();
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
   }
 
+  return <>{children}</>;
+};
+
+const App = () => {
   return (
-    <ClerkProvider publishableKey={publishableKey}>
+    <AuthProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Toaster />
@@ -57,7 +52,6 @@ const App = () => {
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/about" element={<AboutUs />} />
               <Route path="/try-us" element={<TryUs />} />
-              <Route path="/signup" element={<SignUpForm />} />
 
               {/* Protected Routes with MainLayout */}
               <Route 
@@ -106,7 +100,7 @@ const App = () => {
           </BrowserRouter>
         </TooltipProvider>
       </QueryClientProvider>
-    </ClerkProvider>
+    </AuthProvider>
   );
 }
 
