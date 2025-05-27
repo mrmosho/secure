@@ -34,6 +34,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 function AppRoutes() {
   return (
     <Routes>
+      {/* Public Routes */}
       <Route path="/" element={<Index />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
@@ -42,48 +43,30 @@ function AppRoutes() {
       <Route path="/about" element={<AboutUs />} />
       <Route path="/try-us" element={<TryUs />} />
 
-      {/* Protected Routes */}
-      <Route 
-        path="/dashboard" 
+      {/* Protected Routes - All wrapped in MainLayout */}
+      <Route
         element={
           <ProtectedRoute>
             <MainLayout />
           </ProtectedRoute>
         }
       >
-        <Route index element={<Dashboard />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/monitoring" element={<MonitoringPanel />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/notifications" element={<Notifications />} />
       </Route>
+
+      {/* Standalone Protected Route */}
       <Route 
-        path="/monitoring" 
+        path="/image-scanner" 
         element={
           <ProtectedRoute>
-            <MainLayout />
+            <ImageScanner />
           </ProtectedRoute>
-        }
-      >
-        <Route index element={<MonitoringPanel />} />
-      </Route>
-      <Route 
-        path="/settings" 
-        element={
-          <ProtectedRoute>
-            <MainLayout />
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<Settings />} />
-      </Route>
-      <Route 
-        path="/notifications" 
-        element={
-          <ProtectedRoute>
-            <MainLayout />
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<Notifications />} />
-      </Route>
-      <Route path="/image-scanner" element={<ProtectedRoute><ImageScanner /></ProtectedRoute>} />
+        } 
+      />
+      
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
@@ -91,16 +74,16 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <AuthProvider>
           <TooltipProvider>
             <AppRoutes />
             <Toaster />
             <Sonner />
           </TooltipProvider>
-        </QueryClientProvider>
-      </AuthProvider>
-    </BrowserRouter>
+        </AuthProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }
