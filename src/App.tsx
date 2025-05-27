@@ -25,7 +25,6 @@ import AboutUs from "./pages/AboutUs";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
-const clerkKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => (
   <>
@@ -36,70 +35,78 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => (
   </>
 );
 
-const App = () => (
-  <ClerkProvider publishableKey={clerkKey}>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/about" element={<AboutUs />} />
-            <Route path="/try-us" element={<TryUs />} />
+const App = () => {
+  const publishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
-            {/* Protected Routes with MainLayout */}
-            <Route 
-              path="/dashboard" 
-              element={
-                <ProtectedRoute>
-                  <MainLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<Dashboard />} />
-            </Route>
-            <Route 
-              path="/monitoring" 
-              element={
-                <ProtectedRoute>
-                  <MainLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<MonitoringPanel />} />
-            </Route>
-            <Route 
-              path="/settings" 
-              element={
-                <ProtectedRoute>
-                  <MainLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<Settings />} />
-            </Route>
-            <Route 
-              path="/notifications" 
-              element={
-                <ProtectedRoute>
-                  <MainLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<Notifications />} />
-            </Route>
-            <Route path="/image-scanner" element={<ProtectedRoute><ImageScanner /></ProtectedRoute>} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
-  </ClerkProvider>
-);
+  if (!publishableKey) {
+    throw new Error("Missing Clerk Publishable Key");
+  }
+
+  return (
+    <ClerkProvider publishableKey={publishableKey}>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/about" element={<AboutUs />} />
+              <Route path="/try-us" element={<TryUs />} />
+
+              {/* Protected Routes with MainLayout */}
+              <Route 
+                path="/dashboard" 
+                element={
+                  <ProtectedRoute>
+                    <MainLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<Dashboard />} />
+              </Route>
+              <Route 
+                path="/monitoring" 
+                element={
+                  <ProtectedRoute>
+                    <MainLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<MonitoringPanel />} />
+              </Route>
+              <Route 
+                path="/settings" 
+                element={
+                  <ProtectedRoute>
+                    <MainLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<Settings />} />
+              </Route>
+              <Route 
+                path="/notifications" 
+                element={
+                  <ProtectedRoute>
+                    <MainLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<Notifications />} />
+              </Route>
+              <Route path="/image-scanner" element={<ProtectedRoute><ImageScanner /></ProtectedRoute>} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ClerkProvider>
+  );
+}
 
 export default App;
