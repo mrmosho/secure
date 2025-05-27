@@ -57,6 +57,7 @@ const App = () => {
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/about" element={<AboutUs />} />
               <Route path="/try-us" element={<TryUs />} />
+              <Route path="/signup" element={<SignUpForm />} />
 
               {/* Protected Routes with MainLayout */}
               <Route 
