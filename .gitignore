@@ -19,3 +19,4 @@ build/
 *.tar.gz
 *.bak
 .vscode/
+.env
