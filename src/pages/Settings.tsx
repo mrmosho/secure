@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/UI/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/UI/card";
-import { Button } from "@/components/UI/button";
-import { Separator } from "@/components/UI/separator";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import SettingItem from "@/components/Settings/SettingItem";
 import { useToast } from "@/hooks/use-toast";
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/UI/card';
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Users, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/UI/button';
 import { Link } from 'react-router-dom';
@@ -16,8 +16,7 @@ const AboutUs: React.FC = () => {
     { id: 2, name: 'Amr Mohamed', role: 'Frontend Developer' },
     { id: 3, name: 'Marwan Mohamed', role: 'Security Specialist' },
     { id: 4, name: 'Ahmed Ali', role: 'Backend Developer' },
-    { id: 5, name: 'Ibrahim Khaled', role: 'Team Member' },
-    { id: 6, name: 'Ziad Abdulrahman', role: 'Team Member' },
+  
   ];
 
   return (
