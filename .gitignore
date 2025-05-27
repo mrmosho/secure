@@ -3,7 +3,6 @@ __pycache__/
 *.py[cod]
 *.sqlite3
 *.log
-*.env
 *.db
 venv/
 **/venv/
@@ -13,10 +12,16 @@ node_modules/
 dist/
 build/
 
+# Environment Variables
+.env
+.env.local
+.env.development
+.env.production
+*.env
+
 # General
 .DS_Store
 *.zip
 *.tar.gz
 *.bak
 .vscode/
-.env
